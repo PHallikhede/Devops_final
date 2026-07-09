@@ -1,0 +1,53 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  terraformVersion: '1.6.6'
+  workingDirectory: 'terraform'
+  azureServiceConnection: 'Connection'
+
+steps:
+
+# Install Terraform
+- task: TerraformInstaller@1
+  displayName: 'Install Terraform'
+  inputs:
+    terraformVersion: $(terraformVersion)
+
+# Terraform Init
+- task: TerraformTaskV4@4
+  displayName: 'Terraform Init'
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: '$(workingDirectory)'
+    backendServiceArm: '$(azureServiceConnection)'
+
+# Terraform Validate
+- task: TerraformTaskV4@4
+  displayName: 'Terraform Validate'
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+    workingDirectory: '$(workingDirectory)'
+
+# Terraform Plan
+- task: TerraformTaskV4@4
+  displayName: 'Terraform Plan'
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    workingDirectory: '$(workingDirectory)'
+    environmentServiceNameAzureRM: '$(azureServiceConnection)'
+
+# Terraform Apply
+- task: TerraformTaskV4@4
+  displayName: 'Terraform Apply'
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    workingDirectory: '$(workingDirectory)'
+    environmentServiceNameAzureRM: '$(azureServiceConnection)'
