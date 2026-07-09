@@ -24,7 +24,7 @@ steps:
     provider: 'azurerm'
     command: 'init'
     workingDirectory: '$(workingDirectory)'
-    backendServiceArm: '$(azureServiceConnection)'
+    
 
 # Terraform Validate
 - task: TerraformTaskV4@4
