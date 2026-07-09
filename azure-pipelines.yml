@@ -48,4 +48,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'apply'
+    
+=======
     environmentServiceNameAzureRM: 'Connection'
+>>>>>>> 8df45de (changed yml)
