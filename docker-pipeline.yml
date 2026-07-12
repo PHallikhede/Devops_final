@@ -1,0 +1,50 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  acrName: 'poojaacr1'
+  imageName: 'employee-management'
+  imageTag: 'v1'
+
+steps:
+
+# Checkout code
+- checkout: self
+
+# Login to Azure
+- task: AzureCLI@2
+  displayName: 'Azure Login'
+  inputs:
+    azureSubscription: 'connection'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az account show
+
+# Login to Azure Container Registry
+- task: AzureCLI@2
+  displayName: 'Login to ACR'
+  inputs:
+    azureSubscription: 'connection'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az acr login --name $(acrName)
+
+# Build Docker Image
+- script: |
+    docker build -t $(imageName):$(imageTag) -f app/Dockerfile app
+  displayName: 'Build Docker Image'
+
+# Tag Image
+- script: |
+    docker tag $(imageName):$(imageTag) $(acrName).azurecr.io/$(imageName):$(imageTag)
+  displayName: 'Tag Docker Image'
+
+# Push Image
+- script: |
+    docker push $(acrName).azurecr.io/$(imageName):$(imageTag)
+  displayName: 'Push Docker Image'
