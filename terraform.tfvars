@@ -10,8 +10,6 @@ subnet_name = "WebSubnet"
 
 nsg_name = "Web-NSG"
 
-public_ip_name = "Web-Public-IP"
-
 nic_name = "Web-NIC"
 
 vm_name = "WindowsVM"
